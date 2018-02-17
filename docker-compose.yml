@@ -1,0 +1,77 @@
+version: '2'
+
+services:
+  openresty:
+    build: ./openresty
+    volumes:
+      - ./openresty/conf/nginx.conf:/etc/nginx/conf.d/conf/nginx.conf:ro
+      - ./openresty/conf/upstream.conf:/etc/nginx/conf.d/conf/upstream.conf:ro
+      - ./openresty/sites:/etc/nginx/conf.d/conf/sites:ro
+      - ${APPLICATION_PATH}:/var/www:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - php-fpm
+    networks:
+      - frontend
+      - backend
+      
+  php-fpm:
+    build:
+      context: ./php-fpm
+      args:
+        - PHP_OPCACHE=${PHP_OPCACHE}
+    volumes:
+      - ./php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+      - ${APPLICATION_PATH}:/var/www
+    depends_on:
+      - redis
+      - postgres
+      - elasticsearch
+    networks:
+      - backend
+      
+  redis:
+    build: ./redis
+    networks:
+      - backend
+      
+  postgres:
+    build: ./postgres
+    volumes:
+      - ${DATA_PATH}/postgres:/var/lib/postgresql
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
+      
+  rabbitmq:
+    build: ./rabbitmq
+    depends_on:
+      - php-fpm
+    networks:
+      - backend
+      
+  elasticsearch:
+    build: ./elasticsearch
+    volumes:
+      - ${DATA_PATH}/elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=laradock-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1024m
+    networks:
+      - backend
+      
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"
