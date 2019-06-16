@@ -1,4 +1,4 @@
-FROM openresty/openresty:alpine-fat
+FROM openresty/openresty:alpine
 
 RUN adduser -D www-data
 

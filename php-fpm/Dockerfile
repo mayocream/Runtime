@@ -1,18 +1,22 @@
-FROM php:fpm-alpine3.7
+FROM php:7-fpm-alpine
 
-RUN apk update && apk add autoconf gcc libc-dev make icu-dev gettext-dev \
-	&& apk --no-cache add postgresql-dev
+RUN apk update && apk add --no-cache --virtual .build-deps \
+ 	autoconf gcc libc-dev make
+	
+
+# RUN apk add postgresql-dev
 
 RUN pecl install redis \
-	&& docker-php-ext-enable redis
+	&& docker-php-ext-enable redis \
+	&& docker-php-ext-install pdo_mysql
 	
-RUN docker-php-ext-install pgsql pdo_pgsql intl hash gettext
+# ARG PHP_OPCACHE=false
 
-ARG PHP_OPCACHE=false
+# RUN if [ ${PHP_OPCACHE} = true ]; then \
+# 	docker-php-ext-install opcache \
+# ;fi
 
-RUN if [ ${PHP_OPCACHE} = true ]; then \
-	docker-php-ext-install opcache \
-;fi
+RUN apk del .build-deps
 
 WORKDIR /var/www
 
