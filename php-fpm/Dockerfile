@@ -6,7 +6,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
 
 # RUN apk add postgresql-dev
 
-RUN pecl install redis \
+RUN pecl install redis bcmatch \
 	&& docker-php-ext-enable redis \
 	&& docker-php-ext-install pdo_mysql
 	
