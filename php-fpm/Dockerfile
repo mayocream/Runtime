@@ -1,14 +1,11 @@
 FROM php:7-fpm-alpine
 
 RUN apk update && apk add --no-cache --virtual .build-deps \
- 	autoconf gcc libc-dev make
-	
+ 	autoconf gcc libc-dev make libpng libpng-dev
 
-# RUN apk add postgresql-dev
-
-RUN pecl install redis bcmatch \
+RUN pecl install redis \
 	&& docker-php-ext-enable redis \
-	&& docker-php-ext-install pdo_mysql
+	&& docker-php-ext-install pdo_mysql bcmath gd
 	
 # ARG PHP_OPCACHE=false
 
