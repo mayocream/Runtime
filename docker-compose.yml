@@ -15,6 +15,17 @@ services:
       - frontend
       - backend
       
+  apache:
+    build: ./apache
+    volumes:
+      - ${APPLICATION_PATH}:/var/www/
+      - ./apache/sites:/etc/apache2/sites-available
+    ports:
+      - "8080:80"
+    networks:
+      - frontend
+      - backend
+
   php-fpm:
     build:
       context: ./php-fpm
@@ -30,7 +41,7 @@ services:
   mysql:
     build: ./mysql
     volumes:
-      - ${DATA_PATH}/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -41,8 +52,19 @@ services:
   redis:
     build: ./redis
     volumes:
-      - ${DATA_PATH}/redis:/data
+      - ./data/redis:/data
     networks:
+      - backend
+
+  portainer:
+    build: ./portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+    ports:
+      - "9000:9000"
+    networks:
+      - frontend
       - backend
 
 networks:
