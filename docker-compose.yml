@@ -38,6 +38,17 @@ services:
     networks:
       - backend
 
+  phpmyadmin:
+    build: ./phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - MYSQL_ROOT_PASSWORD=
+    ports:
+      - "8888:80"
+    networks:
+      - frontend
+      - backend
+
   mysql:
     build: ./mysql
     volumes:
