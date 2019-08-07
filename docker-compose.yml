@@ -1,6 +1,16 @@
 version: '2'
 
 services:
+
+  workspace:
+    build: ./workspace
+    tty: true
+    volumes:
+      - ${APPLICATION_PATH}:/var/www/
+    networks:
+      - frontend
+      - backend
+
   openresty:
     build: ./openresty
     volumes:
@@ -15,16 +25,16 @@ services:
       - frontend
       - backend
       
-  apache:
-    build: ./apache
-    volumes:
-      - ${APPLICATION_PATH}:/var/www/
-      - ./apache/sites:/etc/apache2/sites-available
-    ports:
-      - "8080:80"
-    networks:
-      - frontend
-      - backend
+  # apache:
+  #   build: ./apache
+  #   volumes:
+  #     - ${APPLICATION_PATH}:/var/www/
+  #     - ./apache/sites:/etc/apache2/sites-available
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     - frontend
+  #     - backend
 
   php-fpm:
     build:
