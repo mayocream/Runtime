@@ -104,6 +104,15 @@ services:
     ports:
       - "3690:3690"
 
+  gogs:
+    container_name: gogs
+    build: ./gogs
+    volumes:
+      - ./data/gogs:/data
+    ports:
+      - "10022:22"
+      - "10080:3000"
+
 
 networks:
   frontend:
