@@ -1,5 +1,7 @@
 FROM php:7-fpm-alpine
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
 RUN apk update && apk add --no-cache --virtual .build-deps \
  	autoconf gcc libc-dev make libpng libpng-dev
 
