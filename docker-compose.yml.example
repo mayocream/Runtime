@@ -95,8 +95,9 @@ services:
     container_name: svn-server
     build: ./svn-server
     volumes:
-      - ./data/svn-server:/var/opt/svn
+      - ./data/svn-server:/home/svn
     ports:
+      - "8088:80"
       - "3690:3690"
     networks:
       - misaka
