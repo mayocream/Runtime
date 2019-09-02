@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   workspace:
@@ -107,4 +105,6 @@ services:
 
 networks:
   frontend:
+    driver: bridge
   backend:
+    driver: bridge
