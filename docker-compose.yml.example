@@ -103,6 +103,9 @@ services:
       - ./data/svn-server:/var/opt/svn
     ports:
       - "3690:3690"
+    networks:
+      - frontend
+      - backend
 
   gogs:
     container_name: gogs
@@ -112,6 +115,9 @@ services:
     ports:
       - "10022:22"
       - "10080:3000"
+    networks:
+      - frontend
+      - backend
 
 
 networks:
