@@ -1,2 +1,3 @@
 APPLICATION_PATH=/home/mayo/Development
 MYSQL_ROOT_PASSWORD=
+DATA_PATH=

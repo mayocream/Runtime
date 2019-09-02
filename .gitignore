@@ -3,3 +3,4 @@ data/*
 !data/.keep
 docker-compose.yml
 openresty/sites/*
+!openresty/sites/default.conf
