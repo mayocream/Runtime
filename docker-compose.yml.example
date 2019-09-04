@@ -77,6 +77,7 @@ services:
     build: ./redis
     volumes:
       - ./data/redis:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - misaka
 
