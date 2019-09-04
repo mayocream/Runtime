@@ -8,6 +8,8 @@ services:
     tty: true
     volumes:
       - ${APPLICATION_PATH}:/var/www/
+      - ./workspace/data:/var/data
+      - ./workspace/conf:/var/conf
     networks:
       - misaka
 
