@@ -8,8 +8,16 @@ services:
     tty: true
     volumes:
       - ${APPLICATION_PATH}:/var/www/
-      - ./workspace/data:/var/data
-      - ./workspace/conf:/var/conf
+    networks:
+      - misaka
+
+  cron:
+    container_name: cron
+    build: ./cron
+    volumes:
+      - ${APPLICATION_PATH}:/var/www/
+      - ./workspace/logs:/var/logs
+      - ./workspace/shell:/var/shell
     networks:
       - misaka
 

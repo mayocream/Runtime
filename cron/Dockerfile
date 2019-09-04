@@ -27,4 +27,9 @@ RUN apk del .build-deps
 RUN apk add supervisor bash git \
 	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
+COPY ./conf/cronjobs /etc/crontabs/root
+
 WORKDIR /var/www
+
+# start crond with log level 8 in foreground, output to stderr
+CMD ["crond", "-f", "-d", "8"]
