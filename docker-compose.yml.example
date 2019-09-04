@@ -80,6 +80,22 @@ services:
     networks:
       - misaka
 
+  rabbitmq:
+    container_name: rabbitmq
+    build: ./rabbitmq
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=vhost
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - misaka
+
+
   portainer:
     container_name: portainer
     build: ./portainer
