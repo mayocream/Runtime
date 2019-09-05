@@ -1,6 +1,9 @@
 .env
 data/*
-!data/.keep
 docker-compose.yml
 openresty/sites/*
+*.log
+cron/logs/
 !openresty/sites/default.conf
+!**/.keep
+!**/.gitkeep
