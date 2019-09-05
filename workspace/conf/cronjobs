@@ -1,0 +1,94 @@
+#车查查
+*/5 * * * * /usr/local/bin/php /var/www/chechacha/public/script/index.php app=login
+*/15 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=trade
+
+#法律-登录
+#*/5 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=login
+
+#每天8点导出外链给袁文君
+0 8 * * * /usr/local/bin/php /var/www/wenjun_boss/public/script/index.php app=wailian
+
+#每天凌晨导出前一天答案审核数据
+#0 1 * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=crontab act=checkAnswerReport order=prev
+
+#每15分钟分钟分析一次答案审核数据
+#*/10 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=crontab act=checkAnswerReport
+
+#*/1 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=baiduAnswer
+
+#中顾网数据获取
+#*/5 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=question act=zhonggu
+#*/5 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=question act=falv110
+
+#每分钟执行邮件发送
+*/1 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/script/index.php app=email  >/dev/null 2>&1 &
+
+#15分每次自我造血
+#*/15 * * * * /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=clean
+
+#每10分钟同步一次对账单
+*/10 * * * * nohup /usr/local/bin/php /var/www/wenjun_boss/public/script/index.php app=billLou  >/dev/null 2>&1 &
+
+#每三分钟将审核中的答案归位
+#*/3 * * * * nohup /usr/local/bin/php /var/www/wenjun_boss/public/helper/index.php app=crontab act=setAnswerState
+
+#每天凌晨维护前一天的数据
+0 01 * * * nohup  /usr/local/bin/php /var/www/wenjun_boss/public/script/index.php app=billLou act=repair  >/dev/null 2>&1 &
+
+#oneinstack
+#0 2 * * * /oneinstack/backup.sh  > /dev/null 2>&1 &
+
+#每分钟监测一下risk服务队列
+*/1 * * * * /var/shell/risk_rabbit.sh >/dev/null 2>&1 &
+
+#每分钟监测一下易夫服务队列
+*/1 * * * * /var/shell/yifu_rabbit.sh >/dev/null
+
+#每分钟发送一次风控邮件
+*/1 * * * * nohup /usr/local/bin/php /var/www/risk/public/script/index.php app=email
+
+#流量站任务
+0 1 * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=cache
+*/2 * * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=tencent
+*/2 * * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=tencent act=task
+#*/1 * * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=tencent act=drop
+0 2 * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=href
+#*/1 * * * * /usr/local/bin/php /var/www/liuliang/public/script/index.php app=shopArticle
+
+#数据大屏初始化
+0 0 * * * /usr/local/bin/php /var/www/yifu/public/script/index.php app=zhidao
+
+#每分钟同步一次订单数据
+* * * * * sleep 20;  /usr/local/bin/php /var/www/yifu/public/script/index.php app=test act=index > /dev/null 2>&1
+
+#易夫延迟发送聊天
+#* * * * * sleep 1; curl https://api.iflawyer.com/default/pendingMessage
+* * * * * sleep 1; curl https://api.iflawyer.com/default/iterationPendingMessage
+
+#鲸小喜业务订单抓取--每10分钟一次
+*/1 * * * *  /usr/local/bin/php /var/www/systems/public/platform/index.php app=Plattb act=getOrderList
+
+#鲸小喜业务订单处理 -- 每10分钟一次
+*/1 * * * *  /usr/local/bin/php /var/www/systems/public/platform/index.php app=Plattb act=crontabDealOrder
+
+#每分钟维护wen 得订单
+*/1 * * * * nohup  /usr/local/bin/php /var/www/wen/public/script/index.php app=orderManage act=index > /dev/null 2>&1
+
+#每天统计wen 前一天的订单
+0 01 * * * nohup /usr/local/bin/php /var/www/wen/public/script/index.php app=orderStatistics act=index > /dev/null 2>&1
+
+#易夫项目
+#*/2 * * * * /usr/local/bin/php /var/www/yifu/public/script/index.php app=shell
+#*/30 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=baidu
+*/20 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=baiduSem act=updateAccountInfo
+0 8 * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=baiduSem act=getRealTimeData
+*/5 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=semIncome
+*/10 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=baiduSem act=keywordsConsume
+*/5 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=semIncome
+*/1 * * * * /usr/local/bin/php /var/www/yifu/public/script/index.php app=question
+
+*/2 * * * * /usr/local/bin/php /var/www/yifu/public/script/index.php app=email
+*/5 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=sem
+*/10 * * * * /usr/local/bin/php /var/www/yifu/public/sem/index.php app=sem act=reportIp
+*/1 * * * * /usr/local/bin/php /var/www/yifu/public/script/index.php app=wenda act=answer
+
