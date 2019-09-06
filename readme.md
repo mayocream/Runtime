@@ -1,5 +1,10 @@
 Install on Debian 9  
 
+Install     
+
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun    
+
+
 Install docker  
 
 > apt update    

@@ -5,5 +5,4 @@ openresty/sites/*
 *.log
 cron/logs/
 !openresty/sites/default.conf
-!**/.keep
 !**/.gitkeep

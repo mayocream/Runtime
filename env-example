@@ -1,3 +1,5 @@
-APPLICATION_PATH=/home/mayo/Development
+APP_PATH=/var/www
+DATA_PATH=./data
+LOGS_PATH=./logs
 MYSQL_ROOT_PASSWORD=
 RABBITMQ_PASSWORD=

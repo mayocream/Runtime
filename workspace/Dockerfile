@@ -13,14 +13,10 @@ RUN pecl install redis imagick \
     	--with-freetype-dir=/usr/include/ \
     	--with-png-dir=/usr/include/ \
     	--with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install pdo_mysql bcmath gd \
+	&& docker-php-ext-install pdo_mysql bcmath gd opcache \
 	&& docker-php-ext-enable redis imagick
 
-# ARG PHP_OPCACHE=false
-
-# RUN if [ ${PHP_OPCACHE} = true ]; then \
-# 	docker-php-ext-install opcache \
-# ;fi
+COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 RUN apk del .build-deps
 

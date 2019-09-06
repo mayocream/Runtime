@@ -1,5 +1,4 @@
-version: '2'
-
+version: "3"
 services:
 
   workspace:
@@ -7,19 +6,21 @@ services:
     build: ./workspace
     tty: true
     volumes:
-      - ${APPLICATION_PATH}:/var/www/
+      - ${APP_PATH}:/var/www
+      - ${DATA_PATH}:/var/data
+      - ${LOGS_PATH}:/var/logs
     networks:
-      - misaka
+      - backend
 
   cron:
     container_name: cron
     build: ./cron
     volumes:
-      - ${APPLICATION_PATH}:/var/www/
-      - ./workspace/logs:/var/logs
+      - ${APP_PATH}:/var/www
+      - ${LOGS_PATH}:/var/logs
       - ./workspace/shell:/var/shell
     networks:
-      - misaka
+      - backend
 
   openresty:
     container_name: openresty
@@ -29,23 +30,15 @@ services:
       - ./openresty/conf/upstream.conf:/usr/local/openresty/nginx/conf/upstream.conf
       - ./openresty/conf/snippets:/usr/local/openresty/nginx/conf/snippets
       - ./openresty/sites:/usr/local/openresty/nginx/conf/sites
-      - ${APPLICATION_PATH}:/var/www/
+      - ${APP_PATH}:/var/www
+      - ${LOGS_PATH}:/var/logs
     ports:
       - "80:80"
       - "443:443"
     networks:
-      - misaka
+      - frontend
+      - backend
       
-  # apache:
-  #   build: ./apache
-  #   volumes:
-  #     - ${APPLICATION_PATH}:/var/www/
-  #     - ./apache/sites:/etc/apache2/sites-available
-  #   ports:
-  #     - "8080:80"
-  #   networks:
-  #     - misaka
-
   php-fpm:
     container_name: php-fpm
     build:
@@ -55,9 +48,10 @@ services:
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       # - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
-      - ${APPLICATION_PATH}:/var/www
+      - ${APP_PATH}:/var/www
+      - ${LOGS_PATH}:/var/logs
     networks:
-      - misaka
+      - backend
 
   phpmyadmin:
     container_name: phpmyadmin
@@ -68,43 +62,46 @@ services:
     ports:
       - "8888:80"
     networks:
-      - misaka
+      - frontend
+      - backend
 
   mysql:
     container_name: mysql
     build: ./mysql
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ${DATA_PATH}/mysql:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "3306:3306"
+    # ports:
+    #   - "3306:3306"
     networks:
-      - misaka
+      - backend
 
   redis:
     container_name: redis
     build: ./redis
     volumes:
-      - ./data/redis:/data
+      - ${DATA_PATH}/redis:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
-      - misaka
+      - backend
 
   rabbitmq:
     container_name: rabbitmq
     build: ./rabbitmq
     volumes:
-      - ./data/rabbitmq:/var/lib/rabbitmq
+      - ${DATA_PATH}/rabbitmq:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_VHOST=vhost
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
     ports:
-      - "5672:5672"
+      # - "5672:5672"
       - "15672:15672"
     networks:
-      - misaka
+      - frontend
+      - backend
 
 
   portainer:
@@ -112,34 +109,35 @@ services:
     build: ./portainer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/portainer:/data
+      - ${DATA_PATH}/portainer:/data
     ports:
       - "9000:9000"
     networks:
-      - misaka
+      - frontend
 
-  svn-server:
-    container_name: svn-server
-    build: ./svn-server
-    volumes:
-      - ./data/svn-server:/var/opt/svn
-    ports:
-      - "3690:3690"
-    networks:
-      - misaka
+  # svn-server:
+  #   container_name: svn-server
+  #   build: ./svn-server
+  #   volumes:
+  #     - data/svn-server:/var/opt/svn
+  #   ports:
+  #     - "3690:3690"
+  #   networks:
+  #     - frontend
 
   gogs:
     container_name: gogs
     build: ./gogs
     volumes:
-      - ./data/gogs:/data
+      - ${DATA_PATH}/gogs:/data
     ports:
-      - "10022:22"
+      # - "10022:22"
       - "10080:3000"
     networks:
-      - misaka
+      - frontend
+      - backend
 
 
 networks:
-  misaka:
-    driver: bridge
+  frontend:
+  backend:
