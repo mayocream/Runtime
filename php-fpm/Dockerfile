@@ -7,7 +7,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
 
 RUN apk add --no-cache freetype libpng libjpeg-turbo imagemagick libmcrypt-dev
 
-RUN pecl install redis imagick mcrypt \
+RUN pecl install redis imagick mcrypt-1.0.2 \
 	&& docker-php-ext-configure gd \
     	--with-gd \
     	--with-freetype-dir=/usr/include/ \
