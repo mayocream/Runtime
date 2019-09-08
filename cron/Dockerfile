@@ -7,14 +7,14 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
 
 RUN apk add --no-cache freetype libpng libjpeg-turbo imagemagick libmcrypt-dev
 
-RUN pecl install redis imagick \
+RUN pecl install redis imagick mcrypt \
 	&& docker-php-ext-configure gd \
     	--with-gd \
     	--with-freetype-dir=/usr/include/ \
     	--with-png-dir=/usr/include/ \
     	--with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install pdo_mysql bcmath gd opcache mcrypt \
-	&& docker-php-ext-enable redis imagick
+	&& docker-php-ext-install pdo_mysql bcmath gd opcache \
+	&& docker-php-ext-enable redis imagick mcrypt
 
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
