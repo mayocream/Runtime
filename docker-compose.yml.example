@@ -12,6 +12,16 @@ services:
     networks:
       - backend
 
+  lsyncd:
+    container_name: lsyncd
+    build: ./lsyncd
+    volumes:
+      - ${APP_PATH}:/var/www
+      - ${DATA_PATH}:/var/data
+      - ${LOGS_PATH}:/var/logs
+    networks:
+      - backend
+
   cron:
     container_name: cron
     build: ./cron
@@ -43,11 +53,8 @@ services:
     container_name: php-fpm
     build:
       context: ./php-fpm
-      # args:
-      #   - PHP_OPCACHE=${PHP_OPCACHE}
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
-      # - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
     networks:
@@ -74,7 +81,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     # ports:
-    #   - "3306:3306"
+    #  - "3306:3306"
     networks:
       - backend
 
@@ -84,6 +91,8 @@ services:
     volumes:
       - ${DATA_PATH}/redis:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # ports:
+    #  - "6379:6379"
     networks:
       - backend
 
@@ -98,7 +107,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
     ports:
       # - "5672:5672"
-      - "15672:15672"
+      # - "15672:15672"
     networks:
       - frontend
       - backend
@@ -114,16 +123,6 @@ services:
       - "9000:9000"
     networks:
       - frontend
-
-  # svn-server:
-  #   container_name: svn-server
-  #   build: ./svn-server
-  #   volumes:
-  #     - data/svn-server:/var/opt/svn
-  #   ports:
-  #     - "3690:3690"
-  #   networks:
-  #     - frontend
 
   gogs:
     container_name: gogs
