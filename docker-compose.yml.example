@@ -9,6 +9,7 @@ services:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
       - ${LOGS_PATH}:/var/logs
+      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
 
@@ -19,6 +20,10 @@ services:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
       - ${LOGS_PATH}:/var/logs
+      - ./lsyncd/lsyncd.conf:/etc/lsyncd/lsyncd.conf
+      - ./lsyncd/rsync.conf:/etc/rsync/rsync.conf
+      - ./lsyncd/rsync.secrets:/etc/rsync/rsync.secrets
+      - ./lsyncd/rsync.password:/etc/rsync/rsync.password
     networks:
       - backend
 
@@ -29,6 +34,8 @@ services:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
       - ./workspace/shell:/var/shell
+      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./workspace/conf/cronjobs:/etc/crontabs/root
     networks:
       - backend
 
@@ -55,6 +62,7 @@ services:
       context: ./php-fpm
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
     networks:

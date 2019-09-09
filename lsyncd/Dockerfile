@@ -1,10 +1,5 @@
 FROM alpine
 
-RUN apk add --no-cache lsyncd rsync \
-    && mkdir -p /etc/lsyncd \
-                /etc/rsyncd
-
-ADD lsyncd.conf /etc/lsyncd/
-ADD rsync.conf /etc/rsync/
+RUN apk add --no-cache lsyncd rsync
 
 ENTRYPOINT ["docker-entrypoint.sh"]

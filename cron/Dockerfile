@@ -16,14 +16,10 @@ RUN pecl install redis imagick mcrypt-1.0.2 \
 	&& docker-php-ext-install pdo_mysql bcmath gd opcache \
 	&& docker-php-ext-enable redis imagick mcrypt
 
-COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-
 RUN apk del .build-deps
 
 RUN apk add supervisor bash git \
 	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-
-COPY ./conf/cronjobs /etc/crontabs/root
 
 WORKDIR /var/www
 
