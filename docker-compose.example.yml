@@ -24,6 +24,8 @@ services:
       - ./lsyncd/rsync.conf:/etc/rsync/rsync.conf
       - ./lsyncd/rsync.secrets:/etc/rsync/rsync.secrets
       - ./lsyncd/rsync.password:/etc/rsync/rsync.password
+    ports:
+      - "873:873"
     networks:
       - backend
 
