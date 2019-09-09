@@ -24,6 +24,7 @@ services:
       - ./lsyncd/rsync.conf:/etc/rsync/rsync.conf
       - ./lsyncd/rsync.secrets:/etc/rsync/rsync.secrets
       - ./lsyncd/rsync.password:/etc/rsync/rsync.password
+      - ./lsyncd/docker-entrypoint.sh:/etc/lsyncd/run.sh
     networks:
       - backend
 
