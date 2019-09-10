@@ -35,9 +35,9 @@ services:
     volumes:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
-      - ./workspace/shell:/var/shell
-      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
-      - ./workspace/conf/cronjobs:/etc/crontabs/root
+      - ./cron/shell:/var/shell
+      - ./cron/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./cron/conf/cronjobs:/etc/crontabs/root
     networks:
       - backend
 
