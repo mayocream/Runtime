@@ -41,6 +41,19 @@ services:
     networks:
       - backend
 
+  haproxy:
+    container_name: haproxy
+    build: ./haproxy
+    volumes:
+      - ${LOGS_PATH}:/var/logs
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - "80:8008"
+      - "443:8009"
+    networks:
+      - frontend
+      - backend
+
   openresty:
     container_name: openresty
     build: ./openresty
