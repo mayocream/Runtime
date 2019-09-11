@@ -77,7 +77,7 @@ services:
       context: ./php-fpm
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
-      - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
