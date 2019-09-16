@@ -102,7 +102,8 @@ services:
     build: ./mysql
     volumes:
       - ${DATA_PATH}/mysql:/var/lib/mysql
-      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ${LOGS_PATH}:/var/logs
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     # ports:
