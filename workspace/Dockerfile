@@ -13,7 +13,7 @@ RUN pecl install redis imagick mcrypt-1.0.2 \
     	--with-freetype-dir=/usr/include/ \
     	--with-png-dir=/usr/include/ \
     	--with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install pdo_mysql bcmath gd opcache \
+	&& docker-php-ext-install pdo_mysql bcmath gd opcache pcntl \
 	&& docker-php-ext-enable redis imagick mcrypt
 
 RUN apk del .build-deps
