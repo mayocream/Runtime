@@ -106,6 +106,7 @@ services:
       - ${LOGS_PATH}:/var/logs
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # - MYSQL_ALLOW_EMPTY_PASSWORD=true
     # ports:
     #  - "3306:3306"
     networks:
