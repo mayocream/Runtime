@@ -9,7 +9,6 @@ services:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
       - ${LOGS_PATH}:/var/logs
-      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
 
@@ -36,7 +35,6 @@ services:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
       - ./cron/shell:/var/shell
-      - ./cron/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ./cron/conf/cronjobs:/etc/crontabs/root
     networks:
       - backend
@@ -79,7 +77,6 @@ services:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
     networks:
