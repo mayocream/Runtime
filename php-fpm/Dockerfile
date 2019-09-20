@@ -18,6 +18,7 @@ RUN pecl install redis imagick mcrypt-1.0.2 \
 	&& docker-php-ext-enable redis imagick mcrypt
 
 # Opcache Option
+ARG ENABLE_OPCACHE=false
 RUN if [ ${ENABLE_OPCACHE} = true ]; then \
     docker-php-ext-install opcache \
 ;fi
