@@ -12,6 +12,7 @@ services:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
       - ${LOGS_PATH}:/var/logs
+      - ./workspace/php.ini:/usr/local/etc/php/php.ini
       - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
@@ -43,6 +44,7 @@ services:
       - ${LOGS_PATH}:/var/logs
       - ./cron/shell:/var/shell
       - ./cron/conf/cronjobs:/etc/crontabs/root
+      - ./cron/php.ini:/usr/local/etc/php/php.ini
       - ./cron/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
