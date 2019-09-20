@@ -3,12 +3,16 @@ services:
 
   workspace:
     container_name: workspace
-    build: ./workspace
+    build:
+      context: ./workspace
+      args:
+        - ENABLE_OPCACHE=${WORKSPACE_ENABLE_OPCACHE}
     tty: true
     volumes:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
       - ${LOGS_PATH}:/var/logs
+      - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
 
@@ -30,12 +34,16 @@ services:
 
   cron:
     container_name: cron
-    build: ./cron
+    build:
+      context: ./cron
+      args:
+        - ENABLE_OPCACHE=${CRON_ENABLE_OPCACHE}
     volumes:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
       - ./cron/shell:/var/shell
       - ./cron/conf/cronjobs:/etc/crontabs/root
+      - ./cron/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
     networks:
       - backend
 
@@ -73,10 +81,13 @@ services:
     container_name: php-fpm
     build:
       context: ./php-fpm
+      args:
+        - ENABLE_OPCACHE=${PHP_FPM_ENABLE_OPCACHE}
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
     networks:
