@@ -101,6 +101,8 @@ services:
     environment:
       - PMA_HOST=mysql
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./phpmyadmin/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     ports:
       - "8888:80"
     networks:
