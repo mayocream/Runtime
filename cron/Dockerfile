@@ -17,7 +17,7 @@ RUN pecl install redis imagick mcrypt-1.0.3 \
     	--with-freetype \
     	--with-jpeg \
 	&& docker-php-ext-install -j$(nproc) pdo_mysql bcmath gd pcntl \
-	&& docker-php-ext-enable redis imagick mcrypt
+	&& docker-php-ext-enable redis imagick
 
 # Xdebug Option
 ARG ENABLE_XDEBUG=false
