@@ -14,9 +14,8 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo imagemagick libmcrypt-dev
 
 RUN pecl install redis imagick mcrypt-1.0.2 \
 	&& docker-php-ext-configure gd \
-    	--with-freetype=/usr/include/ \
-    	--with-png=/usr/include/ \
-    	--with-jpeg=/usr/include/ \
+    	--with-freetype \
+    	--with-jpeg \
 	&& docker-php-ext-install -j$(nproc) pdo_mysql bcmath gd pcntl \
 	&& docker-php-ext-enable redis imagick mcrypt
 
