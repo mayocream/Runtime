@@ -35,7 +35,7 @@ RUN if [ ${ENABLE_OPCACHE} = true ]; then \
 RUN apk del .build-deps
 
 RUN apk add supervisor bash git \
-	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+	&& curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 WORKDIR /var/www
 
