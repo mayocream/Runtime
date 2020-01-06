@@ -22,7 +22,7 @@ RUN pecl install redis imagick mcrypt-1.0.3 \
 # Xdebug Option
 ARG ENABLE_XDEBUG=false
 RUN if [ ${ENABLE_XDEBUG}  = true ]; then \
-	pecl install xdebug-2.9.0  \
+	pecl install xdebug \
 	&& docker-php-ext-enable xdebug \
 ;fi
 
