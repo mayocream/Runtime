@@ -7,6 +7,7 @@ services:
       context: ./workspace
       args:
         - ENABLE_OPCACHE=${WORKSPACE_ENABLE_OPCACHE}
+        - ENABLE_XDEBUG=${WORKSPACE_ENABLE_XDEBUG}
     tty: true
     volumes:
       - ${APP_PATH}:/var/www
@@ -14,6 +15,7 @@ services:
       - ${LOGS_PATH}:/var/logs
       - ./workspace/php.ini:/usr/local/etc/php/php.ini
       - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./workspace/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     networks:
       - backend
 
@@ -39,6 +41,7 @@ services:
       context: ./cron
       args:
         - ENABLE_OPCACHE=${CRON_ENABLE_OPCACHE}
+        - ENABLE_XDEBUG=${CRON_ENABLE_XDEBUG}
     volumes:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
@@ -46,6 +49,7 @@ services:
       - ./cron/conf/cronjobs:/etc/crontabs/root
       - ./cron/php.ini:/usr/local/etc/php/php.ini
       - ./cron/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./cron/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     networks:
       - backend
 
@@ -85,11 +89,13 @@ services:
       context: ./php-fpm
       args:
         - ENABLE_OPCACHE=${PHP_FPM_ENABLE_OPCACHE}
+        - ENABLE_XDEBUG=${PHP_FPM_ENABLE_XDEBUG}
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
     networks:

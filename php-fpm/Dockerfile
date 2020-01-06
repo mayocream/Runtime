@@ -18,13 +18,22 @@ RUN pecl install redis imagick mcrypt-1.0.2 \
     	--with-freetype-dir=/usr/include/ \
     	--with-png-dir=/usr/include/ \
     	--with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install pdo_mysql bcmath gd pcntl \
+	&& docker-php-ext-install -j$(nproc) pdo_mysql bcmath gd pcntl \
 	&& docker-php-ext-enable redis imagick mcrypt
+
+# Xdebug Option
+ARG ENABLE_XDEBUG=false
+RUN if [ ${ENABLE_XDEBUG}  = true ]; then \
+	pecl install xdebug \
+	&& docker-php-ext-enable xdebug \
+;fi
+
 
 # Opcache Option
 ARG ENABLE_OPCACHE=false
 RUN if [ ${ENABLE_OPCACHE} = true ]; then \
-    docker-php-ext-install opcache \
+	docker-php-ext-configure opcache --enable-opcache \
+    && docker-php-ext-install -j$(nproc) opcache \
 ;fi
 
 RUN apk del .build-deps
