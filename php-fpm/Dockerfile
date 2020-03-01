@@ -70,12 +70,6 @@ RUN docker-php-ext-install -j$(nproc) \
 		pdo_mysql \
 		bcmath \
 		pcntl \
-		session \
-		json \
-		pdo \
-		tokenizer \
-		pgsql \
-		pdo_pgsql \
 		intl \
 		mysqli \
 		curl \
