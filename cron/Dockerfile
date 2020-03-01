@@ -59,8 +59,9 @@ RUN if [ $PHP_EXT_REDIS = true ]; then \
 # Mcrypt Option
 ARG PHP_EXT_MCRYPT=false
 RUN if [ $PHP_EXT_MCRYPT = true ]; then \
-	apk add --no-cache --virtual .ext-deps libmcrypt \
+	apk add --no-cache --virtual .ext-deps libmcrypt-dev \
 	&& pecl install mcrypt-1.0.3 \
+	&& docker-php-ext-enable mcrypt \
 	&& apk del .ext-deps \
 ;fi
 
