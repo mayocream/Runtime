@@ -59,7 +59,9 @@ RUN if [ $PHP_EXT_REDIS = true ]; then \
 # Mcrypt Option
 ARG PHP_EXT_MCRYPT=false
 RUN if [ $PHP_EXT_MCRYPT = true ]; then \
-	pecl install mcrypt-1.0.3 \
+	apk add --no-cache --virtual .ext-deps libmcrypt \
+	&& pecl install mcrypt-1.0.3 \
+	&& apk del .ext-deps \
 ;fi
 
 # Enable other exts
