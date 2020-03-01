@@ -16,14 +16,14 @@ RUN apk add --no-cache --virtual .build-deps \
 	$PHPIZE_DEPS \
 
 # Opcache Option
-ARG PHP_FPM_ENABLE_OPCACHE=false
-RUN if [ $PHP_FPM_ENABLE_OPCACHE = true ]; then \
+ARG PHP_EXT_OPCACHE=false
+RUN if [ $PHP_EXT_OPCACHE = true ]; then \
     docker-php-ext-install opcache \
 ;fi
 
 # Xdebug Option
-ARG PHP_FPM_ENABLE_XDEBUG=false
-RUN if [ $PHP_FPM_ENABLE_XDEBUG = true ]; then \
+ARG PHP_EXT_XDEBUG=false
+RUN if [ $PHP_EXT_XDEBUG = true ]; then \
 	pecl install xdebug  \
 	&& docker-php-ext-enable xdebug \
 ;fi

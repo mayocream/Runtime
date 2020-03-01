@@ -60,8 +60,6 @@ chmod +x /usr/local/bin/docker-compose
 
 ### Replace with China mirror source
 
-### Docker China Mirror    
-
 edit `/etc/docker/daemon.json`
 
 ```json

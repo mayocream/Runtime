@@ -6,8 +6,14 @@ services:
     build:
       context: ./workspace
       args:
-        - ENABLE_OPCACHE=${WORKSPACE_ENABLE_OPCACHE}
-        - ENABLE_XDEBUG=${WORKSPACE_ENABLE_XDEBUG}
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+        - PHP_EXT_OPCACHE=${WORKSPACE_ENABLE_OPCACHE}
+        - PHP_EXT_XDEBUG=${WORKSPACE_ENABLE_XDEBUG}
+        - PHP_EXT_IMAGICK=${PHP_EXT_IMAGICK}
+        - PHP_EXT_GD=${PHP_EXT_GD}
+        - PHP_EXT_REDIS=${PHP_EXT_REDIS}
+        - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     tty: true
     volumes:
       - ${APP_PATH}:/var/www
@@ -21,7 +27,11 @@ services:
 
   lsyncd:
     container_name: lsyncd
-    build: ./lsyncd
+    build:
+      context: ./lsyncd
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${APP_PATH}:/var/www
       - ${DATA_PATH}:/var/data
@@ -40,8 +50,14 @@ services:
     build:
       context: ./cron
       args:
-        - ENABLE_OPCACHE=${CRON_ENABLE_OPCACHE}
-        - ENABLE_XDEBUG=${CRON_ENABLE_XDEBUG}
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+        - PHP_EXT_OPCACHE=${CRON_ENABLE_OPCACHE}
+        - PHP_EXT_XDEBUG=${CRON_ENABLE_XDEBUG}
+        - PHP_EXT_IMAGICK=${PHP_EXT_IMAGICK}
+        - PHP_EXT_GD=${PHP_EXT_GD}
+        - PHP_EXT_REDIS=${PHP_EXT_REDIS}
+        - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     volumes:
       - ${APP_PATH}:/var/www
       - ${LOGS_PATH}:/var/logs
@@ -55,7 +71,11 @@ services:
 
   haproxy:
     container_name: haproxy
-    build: ./haproxy
+    build: 
+      context: ./haproxy
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${LOGS_PATH}:/var/logs
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
@@ -68,7 +88,11 @@ services:
 
   openresty:
     container_name: openresty
-    build: ./openresty
+    build: 
+      context: ./openresty
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ./openresty/conf/nginx.conf:/etc/nginx/conf.d/conf/nginx.conf
       - ./openresty/conf/upstream.conf:/usr/local/openresty/nginx/conf/upstream.conf
@@ -88,8 +112,14 @@ services:
     build:
       context: ./php-fpm
       args:
-        - ENABLE_OPCACHE=${PHP_FPM_ENABLE_OPCACHE}
-        - ENABLE_XDEBUG=${PHP_FPM_ENABLE_XDEBUG}
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+        - PHP_EXT_OPCACHE=${PHP_FPM_ENABLE_OPCACHE}
+        - PHP_EXT_XDEBUG=${PHP_FPM_ENABLE_XDEBUG}
+        - PHP_EXT_IMAGICK=${PHP_EXT_IMAGICK}
+        - PHP_EXT_GD=${PHP_EXT_GD}
+        - PHP_EXT_REDIS=${PHP_EXT_REDIS}
+        - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     volumes:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -103,7 +133,11 @@ services:
 
   phpmyadmin:
     container_name: phpmyadmin
-    build: ./phpmyadmin
+    build: 
+      context: ./phpmyadmin
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     environment:
       - PMA_HOST=mysql
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -117,7 +151,11 @@ services:
 
   mysql:
     container_name: mysql
-    build: ./mysql
+    build: 
+      context: ./mysql
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/mysql:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
@@ -132,7 +170,11 @@ services:
 
   redis:
     container_name: redis
-    build: ./redis
+    build: 
+      context: ./redis
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/redis:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -143,7 +185,11 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    build: ./rabbitmq
+    build: 
+      context: ./rabbitmq
+      args: 
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/rabbitmq:/var/lib/rabbitmq
     environment:
@@ -160,7 +206,11 @@ services:
 
   portainer:
     container_name: portainer
-    build: ./portainer
+    build: 
+      context: ./portainer
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DATA_PATH}/portainer:/data
@@ -171,7 +221,11 @@ services:
 
   gogs:
     container_name: gogs
-    build: ./gogs
+    build: 
+      context: ./gogs
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/gogs:/data
     ports:
