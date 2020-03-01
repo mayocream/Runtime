@@ -1,5 +1,6 @@
 FROM rabbitmq:management-alpine
 
-# SET TIMEZONE
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Set Timezone
+ARG DEFAULT_TIMEZONE=UTC
+RUN apk add --no-cache tzdata
+ENV TZ $DEFAULT_TIMEZONE

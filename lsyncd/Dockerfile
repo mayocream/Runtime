@@ -1,11 +1,16 @@
 FROM alpine
 
-# SET TIMEZONE
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# China Mirror
+ARG CHINA_MIRROR=false
+RUN if [ ${CHINA_MIRROR} = true ]; then \
+	sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+	&& apk update \
+;fi
 
-# ADD MIRROR REPO
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# Set Timezone
+ARG DEFAULT_TIMEZONE=UTC
+RUN apk add --no-cache tzdata
+ENV TZ $DEFAULT_TIMEZONE
 
 RUN apk add --no-cache lsyncd rsync
 

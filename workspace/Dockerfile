@@ -1,37 +1,102 @@
-FROM php:7-cli-alpine
+FROM php:7.4-cli-alpine
 
-# SET TIMEZONE
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# ADD MIRROR REPO
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-
-RUN apk update && apk add --no-cache --virtual .build-deps \
- 	autoconf gcc libc-dev make freetype-dev libpng-dev libjpeg-turbo-dev imagemagick-dev libtool
-
-RUN apk add --no-cache freetype libpng libjpeg-turbo imagemagick libmcrypt-dev
-
-RUN pecl install redis imagick mcrypt-1.0.3 \
-	&& docker-php-ext-configure gd \
-    	--with-freetype \
-    	--with-jpeg \
-	&& docker-php-ext-install -j$(nproc) pdo_mysql bcmath gd pcntl \
-	&& docker-php-ext-enable redis imagick
-
-# Xdebug Option
-ARG ENABLE_XDEBUG=false
-RUN if [ ${ENABLE_XDEBUG}  = true ]; then \
-	pecl install xdebug \
-	&& docker-php-ext-enable xdebug \
+# China Mirror
+ARG CHINA_MIRROR=false
+RUN if [ ${CHINA_MIRROR} = true ]; then \
+	sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+	&& apk update \
 ;fi
 
+# Set Timezone
+ARG DEFAULT_TIMEZONE=UTC
+RUN apk add --no-cache tzdata
+ENV TZ $DEFAULT_TIMEZONE
+
+RUN apk add --no-cache --virtual .build-deps \
+	$PHPIZE_DEPS \
+
 # Opcache Option
-ARG ENABLE_OPCACHE=false
-RUN if [ ${ENABLE_OPCACHE} = true ]; then \
+ARG WORKSPACE_ENABLE_OPCACHE=false
+RUN if [ $WORKSPACE_ENABLE_OPCACHE = true ]; then \
     docker-php-ext-install opcache \
 ;fi
 
+# Xdebug Option
+ARG WORKSPACE_ENABLE_XDEBUG=false
+RUN if [ $WORKSPACE_ENABLE_XDEBUG = true ]; then \
+	pecl install xdebug  \
+	&& docker-php-ext-enable xdebug \
+;fi
+
+# Imagick Option
+ARG PHP_EXT_IMAGICK=false
+RUN if [ $PHP_EXT_IMAGICK = true ]; then \
+	apk add --no-cache --virtual .ext-deps imagemagick-dev \
+	&& pecl install imagick \
+	&& docker-php-ext-enable imagick \
+	&& apk del .ext-deps
+;fi
+
+# GD Option
+ARG PHP_EXT_GD=false
+RUN if [ $PHP_EXT_GD = true ]; then \
+	apk add --no-cache --virtual .ext-deps \
+		freetype-dev \
+		libjpeg-turbo-dev \
+		libpng-dev \
+	&& docker-php-ext-install -j$(nproc) gd \
+	&& docker-php-ext-configure gd --with-freetype --with-jpeg
+	&& apk del .ext-deps
+;fi
+
+# Redis Option
+ARG PHP_EXT_REDIS=false
+RUN if [ $PHP_EXT_REDIS = true ]; then \
+	&& pecl install redis-5.1.1 \
+	&& docker-php-ext-enable redis
+;fi
+
+# Mcrypt Option
+ARG PHP_EXT_MCRYPT=false
+RUN if [ $PHP_EXT_MCRYPT = true ]; then \
+	&& pecl install mcrypt-1.0.3 \
+;fi
+
+# Enable other exts
+RUN docker-php-ext-install -j$(nproc) \
+		pdo_mysql \
+		bcmath \
+		gd \
+		pcntl \
+		session \
+		json \
+		pdo \
+		tokenizer \
+		pgsql \
+		pdo_pgsql \
+		intl \
+		mysqli \
+		curl \
+		exif \
+		fileinfo \
+		gettext \
+		iconv \
+		posix \
+		phar \
+		tidy \
+		xml \
+		xmlrpc
+
+
+# Install runtime dependencies
+RUN set -ex; \
+		runDeps="$( \
+			scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+				| tr ',' '\n' \
+				| sort -u \
+				| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+		)"; \
+		apk add --virtual .phpexts-rundeps $runDeps
 
 RUN apk del .build-deps
 
