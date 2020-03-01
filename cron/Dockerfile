@@ -13,7 +13,7 @@ RUN apk add --no-cache tzdata
 ENV TZ $DEFAULT_TIMEZONE
 
 RUN apk add --no-cache --virtual .build-deps \
-	$PHPIZE_DEPS \
+	$PHPIZE_DEPS
 
 # Opcache Option
 ARG PHP_EXT_OPCACHE=false
