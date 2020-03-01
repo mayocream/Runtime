@@ -1,28 +1,70 @@
-Install on Debian 9  
+## Description
 
-Install curl -sSL https://get.daocloud.io/docker | sh
+[Laradock](https://laradock.io/)-like development and production environment based on Docker containers with Docker Compose.
 
-Install docker  
+Images build with alpine (not all).
 
-> apt update    
-> apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common    
-> curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/debian/gpg | apt-key add -    
-> add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/debian $(lsb_release -cs) stable"    
-> apt update      
-> apt-cache policy docker-ce    
-> apt install docker-ce    
-> systemctl status docker    
+Easy to start from an PHP project.
 
-Install docker-compose   
+## Installation
 
-> curl -L https://get.daocloud.io/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose  
-> chmod +x /usr/local/bin/docker-compose   
+>  Tested on Debian 9 / 10 
 
-Docker China Mirror    
+### Download repo
 
-> nano /etc/docker/daemon.json    
+```bash
+git clone https://github.com/mayocream/Runtime.git
+```
+
+### Install Docker CE
+
+#### from script
+
+```bash
+curl -sSL https://get.docker.com/ | sh
+```
+
+#### manual (China mirror source)
+
+```bash
+apt update    
+apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common    
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/debian/gpg | apt-key add -    
+add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/debian $(lsb_release -cs) stable"    
+apt update      
+apt-cache policy docker-ce    
+apt install docker-ce       
+```
+
+check docker status `systemctl status docker `
+
+### Install Docker Compose
+
+from Github:
+
+```bash
+curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose   
+```
+
+from DaoCloud (China mirror source)
+
+```bash
+curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+```
+
+then:
 
 ```
+chmod +x /usr/local/bin/docker-compose  
+```
+
+### Replace with China mirror source
+
+### Docker China Mirror    
+
+edit `/etc/docker/daemon.json`
+
+```json
 {    
   "registry-mirrors": [    
       "https://registry.docker-cn.com",    
@@ -31,5 +73,39 @@ Docker China Mirror
 }    
 ```
 
-> systemctl daemon-reload    
-> systemctl restart docker
+```bash
+systemctl daemon-reload    
+systemctl restart docker
+```
+
+## Usage
+
+### Before start
+
+edit docker-compose.yml file, comment the part you don't need.
+
+```bash
+cp docker-compose.example.yml docker-compose.yml
+nano docker-compose.yml
+```
+
+edit .env file.
+
+```bash
+cp env-example .env
+nano .env
+```
+
+check the permissions of work folders.
+
+```bash
+mkdir /var/www # Your work folder.
+chmod 777 -R /var/www
+chmod 777 -R /var/runtime # Repo download path
+```
+
+### Start instances
+
+```bash
+docker-compose up -d
+```
