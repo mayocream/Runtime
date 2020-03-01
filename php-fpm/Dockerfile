@@ -34,7 +34,7 @@ RUN if [ $PHP_EXT_IMAGICK = true ]; then \
 	apk add --no-cache --virtual .ext-deps imagemagick-dev \
 	&& pecl install imagick \
 	&& docker-php-ext-enable imagick \
-	&& apk del .ext-deps
+	&& apk del .ext-deps \
 ;fi
 
 # GD Option
@@ -45,15 +45,15 @@ RUN if [ $PHP_EXT_GD = true ]; then \
 		libjpeg-turbo-dev \
 		libpng-dev \
 	&& docker-php-ext-install -j$(nproc) gd \
-	&& docker-php-ext-configure gd --with-freetype --with-jpeg
-	&& apk del .ext-deps
+	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& apk del .ext-deps \
 ;fi
 
 # Redis Option
 ARG PHP_EXT_REDIS=false
 RUN if [ $PHP_EXT_REDIS = true ]; then \
 	&& pecl install redis-5.1.1 \
-	&& docker-php-ext-enable redis
+	&& docker-php-ext-enable redis \
 ;fi
 
 # Mcrypt Option
