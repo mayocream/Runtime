@@ -52,14 +52,14 @@ RUN if [ $PHP_EXT_GD = true ]; then \
 # Redis Option
 ARG PHP_EXT_REDIS=false
 RUN if [ $PHP_EXT_REDIS = true ]; then \
-	&& pecl install redis-5.1.1 \
+	pecl install redis-5.1.1 \
 	&& docker-php-ext-enable redis \
 ;fi
 
 # Mcrypt Option
 ARG PHP_EXT_MCRYPT=false
 RUN if [ $PHP_EXT_MCRYPT = true ]; then \
-	&& pecl install mcrypt-1.0.3 \
+	pecl install mcrypt-1.0.3 \
 ;fi
 
 # Enable other exts
