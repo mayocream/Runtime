@@ -69,7 +69,6 @@ RUN if [ $PHP_EXT_MCRYPT = true ]; then \
 RUN docker-php-ext-install -j$(nproc) \
 		pdo_mysql \
 		bcmath \
-		gd \
 		pcntl \
 		session \
 		json \
