@@ -72,16 +72,8 @@ RUN docker-php-ext-install -j$(nproc) \
 		pcntl \
 		intl \
 		mysqli \
-		curl \
-		exif \
-		fileinfo \
-		gettext \
 		iconv \
-		posix \
-		phar \
-		tidy \
-		xml \
-		xmlrpc
+		posix
 
 
 # Install runtime dependencies
