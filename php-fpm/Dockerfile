@@ -70,7 +70,6 @@ RUN docker-php-ext-install -j$(nproc) \
 		pdo_mysql \
 		bcmath \
 		pcntl \
-		intl \
 		mysqli \
 		iconv \
 		posix
