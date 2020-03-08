@@ -1,10 +1,16 @@
-# work path
-APP_PATH=/var/www
-DATA_PATH=./data
-LOGS_PATH=./logs
+# Local dir settings
+APP_PATH=/opt/app
+DATA_PATH=/var/data
+LOG_PATH=/var/log/runtime
+
+### Container dir settings
+# CONTAINER_APP_PATH=/opt/app
+# CONTAINER_DATA_PATH=/var/data
+# CONTAINER_LOG_PATH=/var/log/runtime
 
 # passwd settings
 MYSQL_ROOT_PASSWORD=
+POSTGRESQL_ROOT_PASSWORD=
 RABBITMQ_PASSWORD=
 
 # China mirror setting

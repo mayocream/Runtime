@@ -1,4 +1,4 @@
-FROM mysql:latest
+FROM mariadb:latest
 
 # Set Timezone
 ARG DEFAULT_TIMEZONE=UTC

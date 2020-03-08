@@ -16,9 +16,9 @@ services:
         - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     tty: true
     volumes:
-      - ${APP_PATH}:/var/www
+      - ${APP_PATH}:/opt/app
       - ${DATA_PATH}:/var/data
-      - ${LOGS_PATH}:/var/logs
+      - ${LOG_PATH}/workspace:/var/log/workspace
       - ./workspace/php.ini:/usr/local/etc/php/php.ini
       - ./workspace/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ./workspace/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
@@ -33,9 +33,9 @@ services:
         - CHINA_MIRROR=${CHINA_MIRROR}
         - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
-      - ${APP_PATH}:/var/www
+      - ${APP_PATH}:/opt/app
       - ${DATA_PATH}:/var/data
-      - ${LOGS_PATH}:/var/logs
+      - ${LOG_PATH}/lsyncd:/var/log/lsyncd
       - ./lsyncd/lsyncd.conf:/etc/lsyncd/lsyncd.conf
       - ./lsyncd/rsync.conf:/etc/rsync/rsync.conf
       - ./lsyncd/rsync.secrets:/etc/rsync/rsync.secrets
@@ -59,8 +59,8 @@ services:
         - PHP_EXT_REDIS=${PHP_EXT_REDIS}
         - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     volumes:
-      - ${APP_PATH}:/var/www
-      - ${LOGS_PATH}:/var/logs
+      - ${APP_PATH}:/opt/app
+      - ${LOG_PATH}:/var/log/cron
       - ./cron/shell:/var/shell
       - ./cron/conf/cronjobs:/etc/crontabs/root
       - ./cron/php.ini:/usr/local/etc/php/php.ini
@@ -77,7 +77,7 @@ services:
         - CHINA_MIRROR=${CHINA_MIRROR}
         - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
-      - ${LOGS_PATH}:/var/logs
+      - ${LOG_PATH}/haproxy:/var/log/haproxy
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     ports:
       - "80:80"
@@ -94,12 +94,12 @@ services:
         - CHINA_MIRROR=${CHINA_MIRROR}
         - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
+      - ${APP_PATH}:/opt/app
+      - ${LOG_PATH}/openresty:/var/log/openresty
       - ./openresty/conf/nginx.conf:/etc/nginx/conf.d/conf/nginx.conf
       - ./openresty/conf/upstream.conf:/usr/local/openresty/nginx/conf/upstream.conf
       - ./openresty/conf/snippets:/usr/local/openresty/nginx/conf/snippets
       - ./openresty/sites:/usr/local/openresty/nginx/conf/sites
-      - ${APP_PATH}:/var/www
-      - ${LOGS_PATH}:/var/logs
     ports:
       - "80:80"
       - "443:443"
@@ -121,13 +121,13 @@ services:
         - PHP_EXT_REDIS=${PHP_EXT_REDIS}
         - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
     volumes:
+      - ${APP_PATH}:/opt/app
+      - ${LOG_PATH}/php-fpm:/var/log/php-fpm
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ./php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - ${APP_PATH}:/var/www
-      - ${LOGS_PATH}:/var/logs
     networks:
       - backend
 
@@ -149,6 +149,25 @@ services:
       - frontend
       - backend
 
+  mysql5.7:
+    container_name: mysql5.7
+    build: 
+      context: ./mysql5.7
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/mysql5.7:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ${LOG_PATH}/mysql5.7:/var/log/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    # ports:
+    #  - "3306:3306"
+    networks:
+      - backend
+
   mysql:
     container_name: mysql
     build: 
@@ -159,12 +178,49 @@ services:
     volumes:
       - ${DATA_PATH}/mysql:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
-      - ${LOGS_PATH}:/var/logs
+      - ${LOG_PATH}/mysql:/var/log/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       # - MYSQL_ALLOW_EMPTY_PASSWORD=true
     # ports:
     #  - "3306:3306"
+    networks:
+      - backend
+
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./mariadb
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/mariadb:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ${LOG_PATH}/mariadb:/var/log/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    # ports:
+    #  - "3306:3306"
+    networks:
+      - backend
+
+  postgres:
+    container_name: postgres
+    build: 
+      context: ./postgres
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/postgres:/var/lib/postgresql/data
+      - ${LOG_PATH}/postgres:/var/lib/postgresql/data/log
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
+    ports:
+      - "5432:5432"
     networks:
       - backend
 

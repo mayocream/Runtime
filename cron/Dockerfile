@@ -92,5 +92,7 @@ RUN apk add supervisor bash git \
 
 WORKDIR /var/www
 
+RUN ln -sf /dev/stderr /var/log/cron/error.log
+
 # start crond with log level 8 in foreground, output to stderr
 CMD ["crond", "-f", "-d", "8"]

@@ -89,6 +89,8 @@ RUN apk del .build-deps
 
 WORKDIR /var/www
 
+RUN ln -sf /dev/stderr /var/log/php-fpm/error.log
+
 CMD ["php-fpm"]
 
 EXPOSE 9000
