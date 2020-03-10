@@ -196,8 +196,8 @@ services:
         - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/mariadb:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
-      - ${LOG_PATH}/mariadb:/var/log/mysql
+      # - ./mysql/my.cnf:/etc/mysql/my.cnf
+      # - ${LOG_PATH}/mariadb:/var/log/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       # - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -215,7 +215,7 @@ services:
         - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
     volumes:
       - ${DATA_PATH}/postgres:/var/lib/postgresql/data
-      - ${LOG_PATH}/postgres:/var/lib/postgresql/data/log
+      # - ${LOG_PATH}/postgres:/var/lib/postgresql/data/log
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
