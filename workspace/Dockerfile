@@ -90,6 +90,7 @@ RUN apk del .build-deps
 RUN apk add supervisor bash git \
 	&& curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
-RUN ln -sf /dev/stderr /var/workspace/cron/error.log
+RUN mkdir -p /var/log/workspace \
+	&& ln -sf /dev/stderr /var/workspace/cron/error.log
 
 WORKDIR /var/www

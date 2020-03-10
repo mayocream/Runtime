@@ -89,7 +89,8 @@ RUN apk del .build-deps
 
 WORKDIR /var/www
 
-RUN ln -sf /dev/stderr /var/log/php-fpm/error.log
+RUN mkdir -p /var/log/php-fpm \
+	&& ln -sf /dev/stderr /var/log/php-fpm/error.log
 
 CMD ["php-fpm"]
 
