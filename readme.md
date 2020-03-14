@@ -107,3 +107,29 @@ chmod 777 -R /var/runtime # Repo download path
 ```bash
 docker-compose up -d
 ```
+
+## Other things
+
+### Docker Settings
+
+Change Docker default hub mirror and expose docker's control port.
+
+edit `/etc/docker/daemon.json`
+
+```json
+{
+    "registry-mirrors": [
+        "https://610w9y8k.mirror.aliyuncs.com"
+    ],
+    "hosts": [
+        "tcp://0.0.0.0:2375",
+        "unix:///var/run/docker.sock"
+    ]
+}
+```
+
+### FAQ - Temporary solutions
+
+**Q: Database won't work on Shared Folders on Windows.**
+
+A: Known as Windows' file system and permission problem, there's no a common solution.
