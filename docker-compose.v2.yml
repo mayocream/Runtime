@@ -1,0 +1,149 @@
+version: "3"
+services:
+
+  haproxy:
+    container_name: haproxy
+    image: haproxy:alpine
+    volumes:
+      - ${LOG_PATH}/haproxy:/var/log/haproxy
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend
+      - backend
+    restart: always
+
+  openresty:
+    container_name: openresty
+    build: 
+      context: ./openresty
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${APP_PATH}:/opt/app
+      - ${LOG_PATH}/openresty:/var/log/openresty
+      - ./openresty/conf/nginx.conf:/etc/nginx/conf.d/conf/nginx.conf
+      - ./openresty/conf/upstream.conf:/usr/local/openresty/nginx/conf/upstream.conf
+      - ./openresty/conf/snippets:/usr/local/openresty/nginx/conf/snippets
+      - ./openresty/sites:/usr/local/openresty/nginx/conf/sites
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend
+      - backend
+    restart: always
+      
+  php-fpm:
+    container_name: php-fpm
+    build:
+      context: ./php-fpm
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+        - PHP_EXT_OPCACHE=${PHP_FPM_ENABLE_OPCACHE}
+        - PHP_EXT_XDEBUG=${PHP_FPM_ENABLE_XDEBUG}
+        - PHP_EXT_IMAGICK=${PHP_EXT_IMAGICK}
+        - PHP_EXT_GD=${PHP_EXT_GD}
+        - PHP_EXT_REDIS=${PHP_EXT_REDIS}
+        - PHP_EXT_MCRYPT=${PHP_EXT_MCRYPT}
+    volumes:
+      - ${APP_PATH}:/opt/app
+      - ${LOG_PATH}/php-fpm:/var/log/php-fpm
+      - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - backend
+    restart: always
+
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./mariadb
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/mariadb:/var/lib/mysql
+      # - ./mysql/my.cnf:/etc/mysql/my.cnf
+      # - ${LOG_PATH}/mariadb:/var/log/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    # ports:
+    #  - "3306:3306"
+    networks:
+      - backend
+    restart: always
+
+  postgres:
+    container_name: postgres
+    build: 
+      context: ./postgres
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/postgres:/var/lib/postgresql/data
+      # - ${LOG_PATH}/postgres:/var/lib/postgresql/data/log
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: always
+
+  redis:
+    container_name: redis
+    build: 
+      context: ./redis
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/redis:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # ports:
+    #  - "6379:6379"
+    networks:
+      - backend
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ${DATA_PATH}/mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+
+  portainer:
+    container_name: portainer
+    build: 
+      context: ./portainer
+      args:
+        - CHINA_MIRROR=${CHINA_MIRROR}
+        - DEFAULT_TIMEZONE=${DEFAULT_TIMEZONE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATA_PATH}/portainer:/data
+    ports:
+      - "9000:9000"
+    networks:
+      - frontend
+    restart: always
+
+networks:
+  frontend:
+  backend:
